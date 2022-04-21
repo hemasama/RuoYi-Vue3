@@ -74,8 +74,8 @@ const router = useRouter();
 const { proxy } = getCurrentInstance();
 
 const loginForm = ref({
-  username: "admin",
-  password: "admin123",
+  username: "",
+  password: "",
   rememberMe: false,
   code: "",
   uuid: ""
@@ -111,7 +111,10 @@ function handleLogin() {
         Cookies.remove("rememberMe");
       }
       // 调用action的登录方法
-      store.dispatch("Login", loginForm.value).then(() => {
+      store.dispatch("Login", {
+        ...loginForm.value,
+        password: encrypt(loginForm.value.password),
+      }).then(() => {
         router.push({ path: redirect.value || "/" });
       }).catch(() => {
         loading.value = false;
@@ -139,9 +142,9 @@ function getCookie() {
   const password = Cookies.get("password");
   const rememberMe = Cookies.get("rememberMe");
   loginForm.value = {
-    username: username === undefined ? loginForm.value.username : username,
+    username: username ?? loginForm.value.username,
     password: password === undefined ? loginForm.value.password : decrypt(password),
-    rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+    rememberMe: Boolean(rememberMe)
   };
 }
 

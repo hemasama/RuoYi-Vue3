@@ -85,7 +85,7 @@ function logout() {
     type: 'warning'
   }).then(() => {
     store.dispatch('LogOut').then(() => {
-      location.href = '/index';
+      location.href = '/';
     })
   }).catch(() => { });
 }
